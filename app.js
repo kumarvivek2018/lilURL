@@ -4,12 +4,15 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose');
+const Counter = require('./models/url').Counter;
 
 mongoose.connect('mongodb://localhost:27017/lilurl', {useNewUrlParser: true, useUnifiedTopology: true});
+Counter.deleteMany({}, (err, resp) => {});
+Counter.create({count: 10000})
+.then((cnt) => {}, (err) => next(err))
+.catch((err) => next(err));
 
 const indexRouter = require('./routes/index');
-const addressRouter = require('./routes/address');
-
 
 const app = express();
 
@@ -24,7 +27,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/address', addressRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
